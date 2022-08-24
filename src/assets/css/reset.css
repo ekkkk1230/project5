@@ -1,0 +1,51 @@
+@charset "utf-8";
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    box-sizing: border-box;
+    font-family: "Noto Sans", Avenir, Helvetica, Arial, sans-serif;
+    /* !!!!(07.28) : 추가 나머지 다 제거 */
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+ul,li {
+    list-style: none;
+}
+
+.cf::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 모바일 수평 스크롤 금지 */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+
+    /* y축 스크롤바 숨기기(작동o) */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+/* y축 스크롤바 숨기기(작동o) */
+.html,
+body::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera*/
+}
