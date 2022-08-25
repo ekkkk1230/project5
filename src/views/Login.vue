@@ -31,7 +31,11 @@
 <script>
 export default {
     name: 'login',
-
+    data(){
+        return{
+            
+        }
+    },
     computed: {
       user () {
         return this.$store.state.user
@@ -59,7 +63,6 @@ export default {
             path: 'index'
             })
 
-            
           },
         });
       },
@@ -146,10 +149,9 @@ section{
     /*     display: flex;
     flex-flow: column nowrap;
     justify-content: center; */
-    max-width: 767px;
-    min-width: 425px;
     width: calc(100% - 40px);
     margin: 0 auto;
+    height: 700px;
 }
 
 h2{

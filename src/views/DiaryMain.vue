@@ -127,7 +127,7 @@ export default {
                 this.$refs.bottom.style.bottom = "0"
                 this.click = 0
             }else if(this.click === 0){
-                this.$refs.bottom.style.bottom = "-32%"
+                this.$refs.bottom.style.bottom = "-50%"
                 this.click = 1
             }
            
@@ -195,7 +195,7 @@ body::-webkit-scrollbar {
 .wrap {
     width: 100%;
     max-width: 767px;
-    min-width: 425px;
+    min-width: 385px;
     margin: 0 auto;
     /* border: 1px solid #000; */
 }
@@ -205,7 +205,7 @@ section{
 /*     display: flex;
     flex-flow: column nowrap;
     justify-content: center; */
-    width: 100%;
+    width: calc(100%-40px);
     margin: 40px auto 110px;
 }
 
@@ -234,7 +234,7 @@ section{
 .diary_top {
     width: 100%;
     max-width: 767px;
-    min-width: 425px;
+    min-width: 385px;
     position: absolute;
     top: 0;
     left: 50%;
@@ -245,7 +245,7 @@ section{
 /* 달력 */
 .calender {
     width: calc(100% - 40px);
-    height: 650px;
+    height: 500px;
     /* background-color: red; */
     /* !!!!(07.29) : 마진높이 수정 */
     margin: 110px auto;
@@ -300,15 +300,13 @@ h1 {
 /* 일지 아래부분 */
 .diary_bottom {
     width: 100%;
-    max-width: 767px;
-    min-width: 425px;
     height: auto;
     padding: 30px 0 110px;
     /* !!!!(07.29) : 굴곡 수정 */
     border-radius: 50px 50px 0 0;
     background-color: #fff;
     position: fixed;
-    bottom: -32%;
+    bottom: -50%;
     left: 50%;
     transform: translateX(-50%);
     transition: bottom .4s;
@@ -325,7 +323,7 @@ h1 {
 }
 
 h2 {
-    font-size: 25px;
+    font-size: 1.2em;
 }
 
 /* 기록 내용 묶음 */
@@ -397,7 +395,7 @@ h2 {
 }
 
 .category p, .content .title {
-    font-size: 18px;
+    font-size: 1em;
     font-weight: 600;
     margin-bottom: 10px;
 }

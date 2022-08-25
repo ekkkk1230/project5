@@ -190,7 +190,7 @@ p.h2_p{
 .wrap {
     width: 100%;
     max-width: 767px;
-    min-width: 425px;
+    min-width: 385px;
     margin: 0 auto;
     overflow: hidden;
     /* border: 1px solid #000; */

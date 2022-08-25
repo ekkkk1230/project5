@@ -271,7 +271,7 @@ h2 {
 
 .wrap {
     max-width: 767px;
-    min-width: 425px;
+    min-width: 385px;
     width: calc(100% - 40px);
     position: relative;
     left: 50%;

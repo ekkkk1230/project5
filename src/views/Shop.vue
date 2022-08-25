@@ -14,12 +14,6 @@
 <template>
     <div class="wrap">
         <!-- 헤더 -->
-<!--         <header>
-            <div class="btns">
-                <h1>SHOP</h1>
-                <a class='cart_bt'><img src="../assets/shopView/shop_cart_bt.png" alt="장바구니"></a>
-            </div>
-        </header> -->
         <header>
             <div class="btns">
                 <h1>SHOP</h1>
@@ -35,8 +29,10 @@
 
             <!-- 인기상품 -->
             <div class="popular">
-                <h2>Popular product</h2>
-                <div class="popular_top">
+                <div class="title">
+                    <h2>Popular product</h2>
+                    <div class="popular_top">
+                </div>
                     <a class="view_all" href="#none">View all <img src="../assets/shopView/shop_viewAll_bt.png" alt="상품 전체보기"></a>
                 </div>
 
@@ -50,61 +46,14 @@
                         </div>
                     </swiper-slide>
                 </swiper>
-                <!-- <div class="slide_container">
-                     상품 
-                     !!!!(07.28) : cf추가 
-                    <div class="silde_box cf">
-                        <div class="product_img">
-                            <img src="../assets/shopView/shop_productImg_01.jpg" alt="상품이미지">
-                        </div>
-                        <div class="product_info">
-                            <p class="name">마음안정 디퓨저</p>
-                            <p class="price"><span>28,000원</span> 14,000원</p>
-                        </div>
-                    </div>
-                    <div class="silde_box">
-                        <div class="product_img">
-                            <img src="../assets/shopView/shop_productImg_01.jpg" alt="상품이미지">
-                        </div>
-                        <div class="product_info">
-                            <p class="name">마음안정 디퓨저</p>
-                            <p class="price"><span>28,000원</span> 14,000원</p>
-                        </div>
-                    </div>
-                    <div class="silde_box">
-                        <div class="product_img">
-                            <img src="../assets/shopView/shop_productImg_01.jpg" alt="상품이미지">
-                        </div>
-                        <div class="product_info">
-                            <p class="name">마음안정 디퓨저</p>
-                            <p class="price"><span>28,000원</span> 14,000원</p>
-                        </div>
-                    </div>
-                    <div class="silde_box">
-                        <div class="product_img">
-                            <img src="../assets/shopView/shop_productImg_01.jpg" alt="상품이미지">
-                        </div>
-                        <div class="product_info">
-                            <p class="name">마음안정 디퓨저</p>
-                            <p class="price"><span>28,000원</span> 14,000원</p>
-                        </div>
-                    </div>
-                    <div class="silde_box">
-                        <div class="product_img">
-                            <img src="../assets/shopView/shop_productImg_01.jpg" alt="상품이미지">
-                        </div>
-                        <div class="product_info">
-                            <p class="name">마음안정 디퓨저</p>
-                            <p class="price"><span>28,000원</span> 14,000원</p>
-                        </div>
-                    </div>
-                </div> -->
             </div>
 
             <!-- 새상품 -->
             <div class="new">
-                <h2>New product</h2>
-                <div class="new_top">
+                <div class="title">
+                    <h2>New product</h2>
+                    <div class="new_top">
+                </div>
                     <a class="view_all" href="#none">View all <img src="../assets/shopView/shop_viewAll_bt.png" alt="상품 전체보기"></a>
                 </div>
                 <!-- 상품 -->
@@ -115,27 +64,6 @@
                         <p class="price"><span>{{newItems[i].price}}</span> {{newItems[i].discount}}원</p>
                     </div>
                 </div>
-                <!-- <div class="product">
-                    <div class="product_img"><img src="../assets/shopView/shop_productImg_01.jpg" alt="상품이미지"></div>
-                    <div class="product_info">
-                        <p class="name">마음안정 디퓨저</p>
-                        <p class="price"><span>28,000원</span> 14,000원</p>
-                    </div>
-                </div>
-                <div class="product">
-                    <div class="product_img"><img src="../assets/shopView/shop_productImg_01.jpg" alt="상품이미지"></div>
-                    <div class="product_info">
-                        <p class="name">마음안정 디퓨저</p>
-                        <p class="price"><span>28,000원</span> 14,000원</p>
-                    </div>
-                </div>
-                <div class="product">
-                    <div class="product_img"><img src="../assets/shopView/shop_productImg_01.jpg" alt="상품이미지"></div>
-                    <div class="product_info">
-                        <p class="name">마음안정 디퓨저</p>
-                        <p class="price"><span>28,000원</span> 14,000원</p>
-                    </div>
-                </div> -->
             </div>
         </section>
         <!-- //// 푸터 //// -->
@@ -228,7 +156,7 @@ body::-webkit-scrollbar {
 
 .wrap {
     max-width: 767px;
-    min-width: 425px;
+    min-width: 385px;
     width: calc(100% - 40px);
     position: relative;
     left: 50%;
@@ -256,11 +184,10 @@ h2 {
 
 /* //// 헤더 //// */
 header {
-    display: inline-block; /* 마진상쇄 해결 */
-    width: 100%;
+    /* display: inline-block; */ /* 마진상쇄 해결 */
+    width: calc(100% - 40px);
     height: 80px;
     margin: 0 auto;
-    margin-bottom: 50px;
     /* background-color: #CEDFCC; */
 }
 
@@ -291,10 +218,23 @@ section{
 
 /* 검색창 */
 .search {
+    width: calc(100% - 40px);
     position: relative;
     margin-bottom: 50px;
+    margin: 0 auto;
 }
-
+.title{
+    width: calc(100% - 40px);
+    margin: 20px auto;
+    position: relative;
+}
+.title h2{
+    margin-bottom: 0;
+}
+.title a{
+    position: absolute;
+    right: 0;
+}
 .search .input_search {
     width: 100%;
     height: 52px;
@@ -401,12 +341,12 @@ input::-webkit-search-results-decoration{
     /* background-color: salmon; */
 }
 
-.popular_top {
+/* .popular_top {
     width: 100%;
     display: flex;
     justify-content: end;
     margin-bottom: 15px;
-}
+} */
 
 .popular .view_all img {
     width: 8px;
@@ -457,7 +397,8 @@ input::-webkit-search-results-decoration{
 /* !!!!(07.28) : 수정 */
 /* 상품-이름 */
 .popular .name {
-    font-size: 1em;
+    font-size: 0.8em;
+    padding: 2px;
     font-weight: 800;
 }
 
@@ -510,13 +451,6 @@ input::-webkit-search-results-decoration{
     margin: 6px auto;
     text-align: center;
 }
-
-/* !!!!(07.28) : 수정 */
-/* 상품-이름 */
-
-/* !!!!(07.28) : 수정 */
-/* 상품-할인가격 */
-
 
 /* 상품-원래가격 */
 .popular .price span {
@@ -595,7 +529,7 @@ input::-webkit-search-results-decoration{
 
 /* 상품-이름 */
 .new .name {
-    font-size: 20px;
+    font-size: 1em;
     font-weight: 800;
 }
 

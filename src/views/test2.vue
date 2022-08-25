@@ -20,6 +20,7 @@ export default {
       idx: 1,
       slidewWidth: 0,
       offset: 0,
+      imgMax : '5',
     }
   },
   computed: {
@@ -36,6 +37,21 @@ export default {
     
   },
   methods: {
+    next(){
+      this.idx++;
+      if(this.idx <= this.imgMax){
+        this.offset = this.slidewWidth * this.idx;
+        this.img.forEach(img => {
+          img.setAttribute('style', `left:${-offset}px`);
+        });
+      }else{
+        this.idx = 0;
+        this.offset = this.slidewWidth * this.idx;
+        this.img.forEach(img => {
+          img.setAttribute('style', `transition: ${0}s; left:${-offset}px`);
+        });
+      }
+    },
     prev(){
       this.idx--;
       if(this.idx > 0){
@@ -43,6 +59,8 @@ export default {
         this.img.forEach(img => {
           img.setAttribute('style', `left:${-offset}px`);
         });
+      }else{
+        this.idx = this.imgMax;
       }
     }
   }

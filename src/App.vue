@@ -25,6 +25,9 @@ export default {
     Footer : Footer,
     isLoading : isLoading,
   },
+  methods: {
+   
+  },
   mounted() {
     setTimeout(()=>{
       this.isLoading=false;
@@ -34,6 +37,6 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 
 </style>
