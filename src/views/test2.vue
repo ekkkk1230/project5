@@ -6,8 +6,15 @@
       </p> -->
       <!-- <div
         v-for="number in [currentNumber]">  -->
-        <img
+        <!-- <img
           :src="images[Math.abs(currentNumber) % images.length]"
+          v-on:mouseover="stopRotation"
+          v-on:mouseout="startRotation"
+        /> -->
+        <img
+          v-for="img in images" :key="img"
+          :src="img"
+          class="img"
           v-on:mouseover="stopRotation"
           v-on:mouseout="startRotation"
         />
@@ -27,10 +34,27 @@ export default {
       ],
       currentNumber: 0,
       timer: null,
+      img_width: 0,
+      offset: 0,
     }
   },
-  ready: function(){
+  /* ready: function(){
     this.startRotation();
+  }, */
+  computed: {
+    getImgWidth: () => {
+      const imgWidth = document.querySelector('image-slider').offsetWidth;
+      return imgWidth;
+    }
+  },
+  mounted(){
+    this.img_width = this.getImgWidth;
+    this.img = document.querySelectorAll('.img');
+    this.imgWrap = document.querySelector('image-slider');
+    this.startRotation();
+    this.cloneSlide();
+    this.imgWrap.addEventListener('mousedown', this.mouseDown);
+    this.imgWrap.addEventListener('mouseup', this.mouseUp);
   },
   methods: {
     startRotation(){
@@ -42,12 +66,45 @@ export default {
       this.timer = null;
     },
 
-    next(){
-      this.currentNumber += 1;
+    cloneSlide(){
+      const startSlide = this.img[0];
+      const endSlide = this.img[this.images.length-1];
+      const startEl = document.createElement(startSlide.tagName);
+      const endEl = document.createElement(endSlide.tagName);
+
+      /* endSlide.classList.forEach(c => endEl.classList.add(c));
+      endEl.innerHTML = endSlide.innerHTML;
+      startSlide.classList.forEach(c => startEl.classList.add(c));
+      startEl.innerHTML = startSlide.innerHTML; */
+
+      this.img[0].before(endEl);
+      this.img[this.images.length-1].after(startEl);
+
+      this.img = document.querySelectorAll('.img');
+      this.offset = this.img_width*this.currentNumber;
+      this.img.forEach(img => img.style.transform = `translateX(${-this.offset}px)`)
     },
     prev(){
-      this.currentNumber -= 1;
-    }
+      this.currentNumber --;
+      if(this.currentNumber > 0){
+        this.offset = this.img_width * (this.currentNumber - 1);
+        this.img.forEach(img => {
+          img.style.transform = `translateX(${-this.offset}px)`
+        })
+      }
+    },
+    next(){
+      this.currentNumber ++;
+      if(this.currentNumber < this.images.length+1){
+        this.offset = this.img_width * (this.currentNumber - 1);
+        this.img.forEach(img => {
+          img.style.transform = `translateX(${-this.offset}px)`
+        })
+      }
+    },
+
+    
+    
   }
 
 
@@ -56,15 +113,22 @@ export default {
 
 <style>
 .wrap{
-  width: 768px;
+  width: 100%;
+  max-width: 767px;
+  min-width: 390px;
   margin: 0 auto;
 }
 image-slider{
-  width: calc(100% - 40px);
-  max-width: 768px;
+  max-width: 767px;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden
+
 }
 image-slider img{
   width: 100%;
+  transition: all .4s;
+  position: relative;
 }
    /*  .fade-transition {
     transition: all 0.8s ease;
