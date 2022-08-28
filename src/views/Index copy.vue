@@ -42,13 +42,16 @@
                         <span>만성피로맨</span>님
                     </p>
                     <div class="phraseWrap">
-                        <p class="phrase_title">{{goodWords[num].sentence}}</p>
-                        <p class="phrase">{{goodWords[num].ko}}</p>
+                            <p class="phrase_title">{{goodWords[num].sentence}}</p>
+                            <p class="phrase">{{goodWords[num].ko}}</p>
                     </div>
                 </div>
-                <div class="profile_img">
-                    <img src="../assets/indexView/main_profile_img.png" alt="프로필사진">
-                </div>
+                <!-- !!!!(07.29) : 링크용 -->
+                <a href="splash.html">
+                    <div class="profile_img">
+                        <img src="../assets/indexView/main_profile_img.png">
+                    </div>
+                </a>
             </div>
         </header>
 
@@ -58,6 +61,7 @@
             <div class="healing_banner">
                 <!-- <h2>Healing product</h2> -->
                 <div class="slide_container">
+
                     <div class="slide_img" v-for="(a,i) in healingBanners" :key="i">
                         <img :src="healingBanners[i].img" alt="힐링상품 배너" draggable="false">
                         <p>{{ healingBanners[i].content }}</p>
@@ -79,6 +83,17 @@
                     </swiper-slide>
                 </swiper>
             </div>
+            <!-- <div class="popular">
+                <h2>Popular meditation</h2>
+                <div class="slide_container">
+                    <div class="silde_box" v-for="(a,i) in popular" :key="i" :style="{ backgroundImage : `url(${popular[i].img})`, backgroundSize : 'cover' }">
+                        <div class="contents_field">
+                            <p>{{ popular[i].content }}</p>
+                            <img src="../assets/indexView/main_contentsPlay_icon.png" alt="인기미디어-플레이">
+                        </div>
+                    </div>
+                </div>
+            </div> -->
 
             <!-- 새로운 미디어 목록 -->
             <div class="new">
@@ -93,6 +108,14 @@
                         </div>
                     </swiper-slide>
                 </swiper>
+                <!-- <div class="slide_container">
+                    <div class="silde_box" v-for="(a,i) in newMedia" :key="i" :style="{ backgroundImage : `url(${newMedia[i].img})`}">
+                        <div class="contents_field">
+                            <p>{{ newMedia[i].content }}</p>
+                            <img src="../assets/indexView/main_contentsPlay_icon.png" alt="새미디어-플레이">
+                        </div>
+                    </div>
+                </div> -->
             </div>
 
             <!-- 힐링클래스 배너 -->
@@ -112,7 +135,7 @@
             </div>
         </section>
         <!-- //// 푸터 //// -->
-        <!-- <Footer></Footer> -->
+        <Footer></Footer>
     </div>
 </template>
 
@@ -140,9 +163,6 @@ export default {
             newMedias,
             classBanners,
             num: '0',
-
-            slideWidth: '',
-            idx: 1,
         }
     },
     components: {
@@ -161,7 +181,6 @@ export default {
         }, 1000);
 
         this.random();
-        
 
     },
     methods: {

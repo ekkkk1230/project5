@@ -1,15 +1,18 @@
 <template>
-  <div>
-   <div class="slide slide_wrap">
-      <div class="slide_item item1">1</div>
-      <div class="slide_item item2">2</div>
-      <div class="slide_item item3">3</div>
-      <div class="slide_item item4">4</div>
-      <div class="slide_item item5">5</div>
-      <div class="slide_prev_button slide_button">◀</div>
-      <div class="slide_next_button slide_button">▶</div>
-      <ul class="slide_pagination"></ul>
-    </div>
+  <div class="wrap">
+    <image-slider>
+      <!-- <p>
+        <a @click="prev">Previous</a> || <a @click="next">Next</a>
+      </p> -->
+      <!-- <div
+        v-for="number in [currentNumber]">  -->
+        <img
+          :src="images[Math.abs(currentNumber) % images.length]"
+          v-on:mouseover="stopRotation"
+          v-on:mouseout="startRotation"
+        />
+      <!-- </div> -->
+    </image-slider>
   </div>
 </template>
 
@@ -17,175 +20,61 @@
 export default {
   data(){
     return{
-      idx: 1,
-      slidewWidth: 0,
-      offset: 0,
-      imgMax : '5',
+      images: [ 
+        "https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2019/09/shutterstock_1151676383.jpg?w=2000",
+        "https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2019/09/shutterstock_1151632343.jpg?w=2000",
+        "https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2019/09/shutterstock_1429964489.jpg?w=2000",
+      ],
+      currentNumber: 0,
+      timer: null,
     }
   },
-  computed: {
-    getImgWidth: () => {
-      const imgWidht = document.querySelector('.slide').clientWidth;
-      return imgWidht;
-    }
-  },
-  mounted(){
-    this.slidewWidth = this.getImgWidth;
-    this.img = document.querySelectorAll('.slide_item');
-    this.img_wrap = document.querySelector('.slide');
-
-    
+  ready: function(){
+    this.startRotation();
   },
   methods: {
+    startRotation(){
+      this.timer = setInterval(this.next, 2500);
+    },
+
+    stopRotation(){
+      clearTimeout(this.timer);
+      this.timer = null;
+    },
+
     next(){
-      this.idx++;
-      if(this.idx <= this.imgMax){
-        this.offset = this.slidewWidth * this.idx;
-        this.img.forEach(img => {
-          img.setAttribute('style', `left:${-offset}px`);
-        });
-      }else{
-        this.idx = 0;
-        this.offset = this.slidewWidth * this.idx;
-        this.img.forEach(img => {
-          img.setAttribute('style', `transition: ${0}s; left:${-offset}px`);
-        });
-      }
+      this.currentNumber += 1;
     },
     prev(){
-      this.idx--;
-      if(this.idx > 0){
-        this.offset = this.slidewWidth * this.idx;
-        this.img.forEach(img => {
-          img.setAttribute('style', `left:${-offset}px`);
-        });
-      }else{
-        this.idx = this.imgMax;
-      }
+      this.currentNumber -= 1;
     }
   }
+
+
 }
 </script>
 
 <style>
-    .slide {
-        /* layout */
-        display: flex;
-        flex-wrap: nowrap;
-        /* 컨테이너의 내용물이 컨테이너 크기(width, height)를 넘어설 때 보이지 않도록 하기 위해 hidden을 준다. */
-        overflow: hidden;
-      
-        /* position */
-        /* slide_button의 position absolute가 컨테이너 안쪽에서 top, left, right offset이 적용될 수 있도록 relative를 준다. (기본값이 static인데, static인 경우 그 상위 컨테이너로 나가면서 현재 코드에선 html을 기준으로 offset을 적용시키기 때문) */
-        position: relative;
-      
-        /* size */
-        width: 100%;
-      
-      }
-      .slide_item {
-        /* layout */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      
-        /* position - 버튼 클릭시 left offset값을 적용시키기 위해 */
-        position: relative;
-        left: 0px;
-      
-        /* size */
-        width: 100%;
-        height: 300px;
-        /* flex item의 flex-shrink는 기본값이 1이므로 컨테이너 크기에 맞게 줄어드는데, 슬라이드를 구현할 것이므로 줄어들지 않도록 0을 준다. */
-        flex-shrink: 0;
-      
-        /* transition */
-        transition: left 0.15s;
-      }
-      .slide_button {
-        /* layout */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      
-        /* position */
-        position: absolute;
-        /* 버튼이 중앙에 위치하게 하기위해 계산 */
-        top: calc(50% - 16px);
-      
-        /* size */
-        width: 32px;
-        height: 32px;
-      
-        /* style */
-        border-radius: 100%;
-        background-color: #cccc;
-        cursor: pointer;
-      }
-      
-      .slide_prev_button {
-        left: 10px;
-      }
-      .slide_next_button {
-        right: 10px;
-      }
-      
-      /* 각 슬라이드가 변경되는 것을 시각적으로 확인하기 쉽도록 각 슬라이드별 색상 적용 */
-      .slide_item.item1 {
-        background-color: darkgoldenrod;
-      }
-      .slide_item.item2 {
-        background-color: aqua;
-      }
-      .slide_item.item3 {
-        background-color: blueviolet;
-      }
-      .slide_item.item4 {
-        background-color: burlywood;
-      }
-      .slide_item.item5 {
-        background-color: cornflowerblue;
-      }
-      
-      /* 페이지네이션 스타일 */
-      ul,
-      li {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-      }
-      .slide_pagination {
-        /* layout */
-        display: flex;
-        gap: 5px;
-      
-        /* position */
-        position: absolute;
-        bottom: 0;
-        /* left:50%, translateX(-50%)를 하면 가로 가운데로 위치시킬 수 있다. */
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .slide_pagination > li {
-        /* 현재 슬라이드가 아닌 것은 투명도 부여 */
-        color: #7fb5ff88;
-        cursor: pointer;
-        font-size: 25px;
-      }
-      .slide_pagination > li.active {
-        /* 현재 슬라이드 색상은 투명도 없이 */
-        color: #7fb5ff;
-      }
-      
-      .slide_item_duplicate {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        left: 0px;
-        width: 100%;
-        height: 300px;
-        flex-shrink: 0;
-        transition: left 0.15s;
-      }
+.wrap{
+  width: 768px;
+  margin: 0 auto;
+}
+image-slider{
+  width: calc(100% - 40px);
+  max-width: 768px;
+}
+image-slider img{
+  width: 100%;
+}
+   /*  .fade-transition {
+    transition: all 0.8s ease;
+    overflow: hidden;
+    visibility: visible;
+    opacity: 1;
+    position: absolute;
+}
+.fade-enter, .fade-leave {
+    opacity: 0;
+    visibility: hidden;
+} */
     </style>

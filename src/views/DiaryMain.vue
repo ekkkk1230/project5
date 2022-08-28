@@ -29,8 +29,20 @@
                 <div class="calender">
                     <b class="monthYear">{{ nowMonth }}, {{ nowYear }}</b>
                     <p class="allMonth"> {{ nowDate }} </p>
-                    <img src="../assets/diaryMainView/all_calendar.png" alt="calender" class="calender_img">
+                    <table id="calendar">
+                    <thead>
+                        <tr>
+                            <th v-for="day in week" :key="day">{{day}}</th>
+                        </tr>
+                    </thead>
+                    <tr class="dateSelector">
+                        <td><input type="button" value="<" @click="prevCalendar" ></td>
+                        <th colspan="5" id="tbCalendarYM"></th>
+                        <td><input type="button" value=">" @click="nextCalendar"></td>
+                    </tr>
+                </table>
                 </div>
+                
 
 
             </div>
@@ -85,7 +97,6 @@
 
 <script>
 import Footer from '../components/Footer.vue';
-import CalendarView from '../views/CalendarView.vue'
 
 
 export default {
@@ -97,40 +108,109 @@ export default {
             nowYear: '',
             nowDate: '',
             nowTime: '',
-            nowMonth:'',
+            days:'',
             click: 1,
+
+            week: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+            monthNum: '',
+
+            today: new Date(),
+            date: new Date(),
         }
     },
     components: {
         Footer : Footer,
-        CalendarView
+    },
+    computed:{
+        
     },
     mounted () {
         this.setNowTimes();
+        this.buildCalendar();
     }, 
     methods: {
         setNowTimes(){
-            let nowDate = new Date()
-            let yy = String(nowDate.getFullYear())
-            let mm = nowDate.getMonth()+1
-            let dd = String(nowDate.getDate() < 10? '0' + nowDate.getDate() : nowDate.getDate())
-            this.nowDate = yy + '.' + mm + '.' + dd
+            let nowDate = new Date();
+            let yy = String(nowDate.getFullYear());
+            let mm = nowDate.getMonth()+1;
+            let dd = String(nowDate.getDate() < 10? '0' + nowDate.getDate() : nowDate.getDate());
+            this.nowDate = yy + '.' + mm + '.' + dd;
 
             let month = ["January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December"
                         ];
-            this.nowMonth = month[nowDate.getMonth()]
-            this.nowYear = yy
+            this.nowMonth = month[nowDate.getMonth()];
+            this.monthNum = nowDate.getMonth() + 1;
+            this.nowYear = yy;
+
+            this.days = this.week[nowDate.getDay()];
         },
         onClick(){
             if(this.click === 1){
                 this.$refs.bottom.style.bottom = "0"
                 this.click = 0
             }else if(this.click === 0){
-                this.$refs.bottom.style.bottom = "-50%"
+                this.$refs.bottom.style.bottom = "-40%"
                 this.click = 1
             }
-           
+        },
+
+        prevCalendar(){
+            this.today = new Date(this.today.getFullYear(), this.today.getMonth() - 1, this.today.getDate());
+            this.buildCalendar();
+        },
+        nextCalendar(){
+            this.today = new Date(this.today.getFullYear(), this.today.getMonth() + 1, this.today.getDate());
+            this.buildCalendar();
+        },
+        buildCalendar(){
+            let doMonth = new Date(this.today.getFullYear(), this.today.getMonth(), 1);
+
+            let lastDate = new Date(this.today.getFullYear(), this.today.getMonth()+1,0);
+
+            let tbCalendar = document.querySelector('#calendar');
+            let tbCalendarYM = document.querySelector('#tbCalendarYM');
+            tbCalendarYM.innerText = this.today.getFullYear()+'년 '+(this.today.getMonth()+1)+'월';
+
+            while (tbCalendar.rows.length > 2) {
+                  tbCalendar.deleteRow(tbCalendar.rows.length-1);
+             }
+             var row = null;
+             row = tbCalendar.insertRow();
+             row.style.display = 'flex'
+             let cell = null;
+             var cnt = 0;
+             for (let i=0; i<doMonth.getDay(); i++) {
+                  cell = row.insertCell();
+                  row.style.display = 'flex'
+                  cell.style.width = '14.2%';
+                  cnt = cnt + 1;
+             }
+             for (let i=1; i<=lastDate.getDate(); i++) { 
+                  cell = row.insertCell();
+                  row.style.display = 'flex'
+                  row.style.height = '60px'
+                  cell.style.width = '14.2%';
+                  cell.style.textAlign = 'center';
+                  cell.style.fontWeight = '600';
+                  cell.style.color = '#ffffff';
+                  cell.innerHTML = i;
+                  cnt = cnt + 1;
+              if (cnt % 7 == 1) {
+                cell.innerHTML = i
+              }       
+              if (cnt%7 == 0){
+                  cell.innerHTML = i
+                   row = calendar.insertRow();
+              }
+              if (this.today.getFullYear() == this.date.getFullYear()
+                 && this.today.getMonth() == this.date.getMonth()
+                 && i == this.date.getDate()) {
+                cell.bgColor = "#3d6875";
+                cell.style.borderRadius = "10px";
+               }
+             }
+
         }
     },
 }
@@ -245,7 +325,7 @@ section{
 /* 달력 */
 .calender {
     width: calc(100% - 40px);
-    height: 500px;
+    height: 650px;
     /* background-color: red; */
     /* !!!!(07.29) : 마진높이 수정 */
     margin: 110px auto;
@@ -288,14 +368,66 @@ h1 {
     font-size: 20px;
 }
 
-.calender_img {
+/* .calender_img {
     width: 90%;
     display: block;
     position: absolute;
     top: 100px;
     transform: translateX(-50%);
     left: 50%;
+} */
+table{
+    width: 100%;
+    margin-top: 50px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center
 }
+thead{
+    width: 100%;
+    /* border-bottom: 1px solid #ffffff; */
+    margin: 10px auto;
+    
+}
+thead tr{
+    display: flex;
+    justify-content: space-between;
+}
+thead th{
+    flex: 1;
+    text-align: center;
+    font-size: 1.5em;
+    color: #ffffff
+}
+thead th:nth-child(1){
+    color: #ee817e
+}
+thead th:nth-child(7){
+    color: #4a74f1
+}
+.dateSelector{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    font-size: 1.2em;
+    margin: 15px 0 20px;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+    padding: 10px;
+}
+.dateSelector input{
+    background-color: transparent;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+}
+.dateSelector th{
+    color: #ffffff
+}
+/* table tr td{
+    border: 1px solid #ffffff
+} */
 
 /* 일지 아래부분 */
 .diary_bottom {
@@ -306,7 +438,7 @@ h1 {
     border-radius: 50px 50px 0 0;
     background-color: #fff;
     position: fixed;
-    bottom: -50%;
+    bottom: -40%;
     left: 50%;
     transform: translateX(-50%);
     transition: bottom .4s;
