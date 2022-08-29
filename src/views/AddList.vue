@@ -99,7 +99,7 @@
         </section>
     </div>
     <!-- //// 푸터 //// -->
-    <Footer></Footer>
+    <!-- <Footer></Footer> -->
 </template>
 
 <script scoped>

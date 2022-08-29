@@ -11,8 +11,8 @@
     !!!! : 수정사항
  -->
 
-<template>
-    <div class="wrap">
+ <template>
+    <div class="wrap indexWrap">
         <h1 class="hidden">마음아지트 메인</h1>
         <!-- //// 헤더 //// -->
         <header>
@@ -52,7 +52,9 @@
         <!-- //// 섹션 //// -->
         <section>
             <!-- 힐링상품 배너 -->
-            <div class="healing_banner">
+            <div class="healing_banner"
+           @mouseover="stopRotation"
+           @mouseout="startRotation">
                 <!-- <h2>Healing product</h2> -->
                 <div class="slide_container">
                     <div class="slide_img" v-for="(a,i) in healingBanners" :key="i">
@@ -142,6 +144,11 @@ export default {
             timer: null,
             itemWidth: 0,
             itemOffset: 0,
+
+            classIdx: 0,
+            class_timer: null,
+            classWidth: 0,
+            classOffset: 0,
         }
     },
     components: {
@@ -152,6 +159,10 @@ export default {
     computed: {
         getItemWidth: () => {
             const item_width = document.querySelector('.healing_banner').offsetWidth;
+            return item_width;
+        },
+        getClassWidth: () => {
+            const item_width = document.querySelector('.class_banner_slide').offsetWidth;
             return item_width;
         }
     },
@@ -165,8 +176,16 @@ export default {
         this.itemWidth = this.getItemWidth;
         this.itemImg = document.querySelectorAll('.healing_banner .slide_img');
         this.itemWrap = document.querySelector('.healing_banner .slide_container');
+
+        
+        this.classWidth = this.getClassWidth;
+        this.classImg = document.querySelectorAll('.class_banner_slide .slide_img');
+        this.classWrap = document.querySelector('.class_banner_slide .slide_container');
+
         this.startRotation();
-        this.cloneItem();   
+        this.cloneItem(this.itemImg, this.healingBanners, this.itemOffset, this.itemWidth, this.itemIdx); 
+        this.startRotation2();
+        this.cloneItem(this.classImg, this.classBanners, this.classOffset, this.classWidth, this.classIdx); 
 
     },
     methods: {
@@ -182,26 +201,32 @@ export default {
             clearInterval(this.timer);
             this.timer = null;
         },
-        cloneItem(){
-            const startSlide = this.itemImg[0];
-            const endSlide = this.itemImg[this.healingBanners.length-1];
+        startRotation2(){
+            this.class_timer = setInterval(this.next2, 2500);
+        },
+        stopRotation2(){
+            clearInterval(this.class_timer);
+            this.class_timer = null;
+        },
+
+        cloneItem(img, count, offset, width, idx){
+            const startSlide = img[0];
+            const endSlide = img[count.length-1];
             const startEl = document.createElement(startSlide.tagName);
             const endEl = document.createElement(endSlide.tagName);
 
             endSlide.classList.forEach(c => endEl.classList.add(c));
-            endEl.innerHTML = endSlide.innerHTML;
-            endEl.setAttribute('data-v-23543608', '')
+            endEl.innerHTML = endSlide.innerHTML;   
 
             startSlide.classList.forEach(c => startEl.classList.add(c));
             startEl.innerHTML = startSlide.innerHTML;
-            startEl.setAttribute('data-v-23543608', '')
 
-            this.itemImg[0].before(endEl);
-            this.itemImg[this.healingBanners.length-1].after(startEl);
+            img[0].before(endEl);
+            img[count.length-1].after(startEl);
 
-            this.itemImg = document.querySelectorAll('.healing_banner .slide_img');
-            this.itemOffset = this.itemWidth*this.itemIdx;
-            this.itemImg.forEach(item => item.setAttribute('style', `left: -${this.itemOffset}px`))
+            img = document.querySelectorAll('.healing_banner .slide_img');
+            offset = width*idx+1;
+            img.forEach(item => item.setAttribute('style', `left: -${offset}px`))
         },
         prev(){
             this.itemIdx --;
@@ -228,15 +253,36 @@ export default {
                 setTimeout(()=>{
                 this.itemImg.forEach(item => item.setAttribute('style',`transition: ${.4}s; left: -${this.itemOffset}px`))
                 }, 0)
-        }
-    },
+            }
+        },
+
+        next2(){
+            this.classIdx ++;
+            if(this.classIdx <= this.classBanners.length){
+                this.classOffset = this.classWidth * (this.classIdx);
+                this.classImg.forEach(c_item => {
+                c_item.setAttribute('style', `left: -${this.classOffset}px`)
+                })
+            }else{
+                this.classIdx = 0;
+                this.classOffset = this.classWidth*this.classIdx;
+                this.classImg.forEach(c_item => c_item.setAttribute('style', `transition: ${0}s; left: -${this.classOffset}px`))
+
+                this.classIdx ++;
+                this.classOffset = this.classWidth*this.classIdx;
+
+                setTimeout(()=>{
+                this.classImg.forEach(c_item => c_item.setAttribute('style',`transition: ${.4}s; left: -${this.classOffset}px`))
+                }, 0)
+            }
+        },
 
 
     }
 }
 </script>
 
-<style scoped>
+<style>
 
 
 @charset "utf-8";
@@ -248,7 +294,6 @@ export default {
     outline: 0;
     box-sizing: border-box;
     font-family: "Noto Sans", Avenir, Helvetica, Arial, sans-serif;
-    /* !!!!(07.28) : 추가 나머지 다 제거 */
     color: #333;
 }
 
@@ -311,14 +356,13 @@ h2 {
     text-align: center;
 }
 
-.wrap {
+.indexWrap {
     max-width: 767px;
     min-width: 385px;
     width: calc(100% - 40px);
     position: relative;
     left: 50%;
     transform: translate(-50%);
-    /* border: 1px solid #000; */
     overflow: hidden;
 }
 
@@ -336,7 +380,6 @@ header {
 
 /* 글로벌 네비 */
 .global_nav {
-    /* display: none; */
     width: 160px;
     height: 50px;
     background-color: #68b39f;
@@ -344,7 +387,6 @@ header {
     position: absolute;
     top: 40px;
     right: -80px;
-    /* 터치전/후 80px 차이 */
 }
 
 .GNV_relative {
@@ -368,18 +410,14 @@ header {
     height: 40px;
     margin-top: 2px;
     position: absolute;
-    /* !!!!(07.28) : 버튼 이동 */
     left: 6px;
-    /* display: none; */
 }
 
 .plus_touch_show {
     width: 85%;
     height: 40px;
     display: flex;
-    /* !!!!(07.28) : 버튼 이동 */
     margin-top: 2px;
-    /* !!!!(07.28) : 버튼 이동 */
     margin-right: 12px;
     justify-content: space-between;
     display: none;
@@ -396,17 +434,14 @@ header {
     width: 85%;
     height: 70%;
     margin: 40px auto;
-    /* background-color: white; */
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .profile_info {
-    /* !!!!(07.28) : 너비조정 */
     width: 78%;
     height: 100%;
-    /* background-color: lightblue; */
 }
 
 /* 접속일 */
@@ -420,7 +455,6 @@ header {
 
 /* 일째 */
 .login_date {
-    /* !!!!(07.28) : 폰트사이즈, 색상 없앰(초기화에 추가) */
     font-size: 20px;
 }
 
@@ -452,19 +486,14 @@ p.phrase_title {
 }
 .phrase {
     font-size: 0.9em;
-    /* !!!!(07.28) : 자간 */
     letter-spacing: -1px;
     line-height: 1.5em;
 }
 
 /* 프로필 이미지 */
 .profile_img {
-    /* !!!!(07.28) : 사진크기 조정 */
     width: 100px;
     height: 100px;
-    /* margin-top: 30px; */
-    
-    /* background-color: #68B39F; */
 }
 
 .profile_img img {
@@ -473,13 +502,8 @@ p.phrase_title {
 
 /* //// 섹션 //// */
 section {
-/*     display: flex;
-    flex-flow: column nowrap;
-    justify-content: center; */
     width: 100%;
     height: auto;
-    /* !!!!(07.28) : 하단여백 수정 */
-    /* 개별 */
     margin: 0 auto 66px;
 }
 
@@ -514,13 +538,11 @@ section {
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    /* !!!!(07.28) : 글꼴스타일 추가 */
     font-size: 22px;
     color: #333;
     letter-spacing: -1px;
 }
 
-/* !!!!(07.28) : 글꼴스타일 추가 */
 .healing_banner p span {
     font-size: 24px;
     font-weight: 800;
@@ -530,7 +552,6 @@ section {
 .popular {
     height: auto;
     margin: 50px auto;
-    /* border: 1px solid #333; */
 }
 .popular .swiper-button-next, .swiper-button-prev{
     width: 0;
@@ -601,51 +622,10 @@ section {
     text-align: center;
 }
 
-/* .popular .slide_container {
-    width: 300%;
-    display: flex;
-    transition: all .5s;
-}
-
-.popular .silde_box {
-    width: 150px;
-    height: 150px;
-    margin-right: 2%;
-    border-radius: 25px;
-    position: relative;
-} */
-
-/* !!!!(07.28) : 추가 */
-/* .popular p {
-    letter-spacing: -1px;
-}
-
-.popular .contents_field {
-    position: relative;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 80%;
-}
-
-.popular .contents_field p {
-    color: #ffffff;
-}
-
-.popular .contents_field img {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    right: 0;
-    bottom: 0;
-} */
-
 /* 새로운 미디어 목록 */
 .new {
     height: auto;
     margin: 50px auto;
-    /* border: 1px solid #333; */
 }
 
 .new .inside-wrapper {
@@ -714,45 +694,6 @@ section {
     text-align: center;
 }
 
-/* .new .slide_container {
-    width: 300%;
-    display: flex;
-    transition: all .5s;
-}
-
-.new .silde_box {
-    width: 150px;
-    height: 150px;
-    margin-right: 2%;
-    border-radius: 25px;
-    position: relative;
-} */
-
-/* !!!!(07.28) : 추가 */
-/* .new p {
-    letter-spacing: -1px;
-}
-
-.new .contents_field {
-    position: relative;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 80%;
-}
-
-.new .contents_field p {
-    color: #ffffff;
-}
-
-.new .contents_field img {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    right: 0;
-    bottom: 0;
-} */
 
 /* 힐링클래스 배너 */
 .class_banner {
@@ -765,34 +706,33 @@ section {
 .class_banner_slide {
     width: 100%;
     height: auto;
-    /* background-color: yellowgreen; */
     overflow: hidden;
 }
 
 .class_banner .slide_container {
     width: 100%;
     display: flex;
-    transition: all .5s;
+    
 }
 
 .class_banner .slide_img {
     width: 100%;
     flex-shrink: 0;
-    /* background-color: #68b39f; */
     position: relative;
+    left: 0;
+    transition: all .4s;
+    overflow: hidden;
 }
 
 .class_banner img {
     width: 90%;
     height: 100%;
-    /* !!!!(07.28) : 수정 */
     border-radius: 25px;
     overflow: hidden;
     display: block;
     margin: 0 auto;
 }
 
-/* !!!!(07.28) : 추가 */
 .class_banner .text_field {
 
     width: 80%;
@@ -803,7 +743,6 @@ section {
     text-align: center;
     letter-spacing: -1px;
     line-height: 40px;
-    /* background-color: rgba(255, 255, 255, .5); */
 }
 
 /* 배너타이틀 */

@@ -27,7 +27,7 @@
                 
                 <!-- 달력 -->
                 <div class="calender">
-                    <b class="monthYear">{{ $store.state.nowMonth }}, {{ nowYear }}</b>
+                    <b class="monthYear">{{ nowMonth }}, {{ nowYear }}</b>
                     <p class="allMonth"> {{ nowDate }} </p>
                     <table id="calendar">
                     <thead>
@@ -104,6 +104,7 @@ export default {
     data() {
         return {
             timer: null,
+            nowMonth:'',
             nowYear: '',
             nowDate: '',
             nowTime: '',
@@ -138,7 +139,7 @@ export default {
             let month = ["January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December"
                         ];
-            this.$store.state.nowMonth = month[nowDate.getMonth()];
+            this.nowMonth = month[nowDate.getMonth()];
             this.monthNum = nowDate.getMonth() + 1;
             this.nowYear = yy;
 

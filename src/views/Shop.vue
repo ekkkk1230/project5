@@ -184,11 +184,10 @@ h2 {
 
 /* //// 헤더 //// */
 header {
-    /* display: inline-block; */ /* 마진상쇄 해결 */
     width: calc(100% - 40px);
-    height: 80px;
+    height: 100px;
     margin: 0 auto;
-    /* background-color: #CEDFCC; */
+    background-color: #ffffff;
 }
 
 .btns {

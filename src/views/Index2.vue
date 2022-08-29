@@ -12,7 +12,7 @@
  -->
 
 <template>
-    <div class="wrap">
+    <div class="wrap indexWrap">
         <h1 class="hidden">마음아지트 메인</h1>
         <!-- //// 헤더 //// -->
         <header>
@@ -240,7 +240,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 
 @charset "utf-8";
@@ -315,7 +315,7 @@ h2 {
     text-align: center;
 }
 
-.wrap {
+.indexWrap {
     max-width: 767px;
     min-width: 385px;
     width: calc(100% - 40px);

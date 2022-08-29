@@ -21,7 +21,6 @@
         </header>
         <!-- //// 섹션 //// -->
         <section>
-            <!-- !!!! : 너무 복잡해서 새로 짰음 -->
             <div class="setting">
                 <h2 class="title"><span>설정</span></h2>
                 <ul>
@@ -47,7 +46,6 @@
             
             <!-- 하단ui 묶음 -->
             <div class="bottom_wrap">
-                <!-- <button @click="kakaoLogout" class="logout_bt">로그아웃</button> -->
                 <button @click="goLogin" class="logout_bt">로그아웃</button>
                 <p class="version">App 버전 1.0</p>
             </div>
@@ -109,7 +107,6 @@ export default {
     outline: 0;
     box-sizing: border-box;
     font-family: "Noto Sans", Avenir, Helvetica, Arial, sans-serif;
-    /* !!!!(07.28) : 추가 나머지 다 제거 */
     color: #333;
 }
 
@@ -160,12 +157,13 @@ body::-webkit-scrollbar {
     max-width: 767px;
     min-width: 385px;
     margin: 0 auto;
-    /* border: 1px solid #000; */
 }
 
 header{
     width: 100%;
+    height: 70px;
     background: #e0ecde;
+    border-radius: 0
 }
 
 header .back_bt{
@@ -178,7 +176,6 @@ header .back_bt{
 }
 
 header span{
-    /* !!!!(07.29) : 수정 */
     font-size: 23px;
     font-weight: 400;
     margin-left: 20px;
@@ -186,9 +183,6 @@ header span{
 
 /* //// 섹션 //// */
 section{
-/*     display: flex;
-    flex-flow: column nowrap;
-    justify-content: center; */
     width: 100%;
     margin: 0 auto ;
 }
@@ -276,72 +270,10 @@ h2 span {
 
 /* 하단ui 묶음 - 버전 정보 */
 .bottom_wrap .version {
-    /* !!!!(07.29) : 마진탑, 폰트사이즈 수정 */
     margin-top: 20px;
     font-size: 14px;
     color: #A9A9A9;
     text-align: center;
 }
 
-
-/* section .list_wrap{
-    height: 100px;
-    width: 100%;
-    background-color: #68b39f;
-    position: relative;
-}
-
-section .list_wrap > ul{
-    width: calc(100% - 40px);
-    height: 100%;
-    line-height: 2;
-    margin: 0 auto;
-}
-
-section .list_wrap > ul > li{
-    color: #333;
-}
-
-section .list_wrap ul li{
-    padding: 10px 0;
-}
-
-section .list_wrap .set_cont{
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: 50px;
-    background-color: #fff;
-}
-
-section .list_wrap .set_cont li{
-    width: calc(100% - 40px);
-    margin: 0 auto;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-}
-
-section .list_wrap.info_list{
-    margin-top: 80px;
-}
-
-section button{
-    width: calc(100% - 40px);
-    margin: 80px auto 0; 
-    padding: 10px;
-    background-color: #aeaeae;
-    font-size: 1.1em;
-    font-weight: 600;
-    border-radius: 10px;
-    color: #fff;
-}
-
-section p{
-    width: calc(100% - 40px);
-    margin: 0 auto;  
-    text-align: center;
-    font-size: 0.9em;
-    color: #a9a9a9;
-} */
 </style>
