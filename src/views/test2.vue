@@ -71,7 +71,8 @@ export default {
       const endSlide = this.img[this.images.length-1];
       const startEl = document.createElement(startSlide.tagName);
       const endEl = document.createElement(endSlide.tagName);
-
+      endEl.src = endSlide.src;
+      startEl.src = startSlide.src;
       /* endSlide.classList.forEach(c => endEl.classList.add(c));
       endEl.innerHTML = endSlide.innerHTML;
       startSlide.classList.forEach(c => startEl.classList.add(c));
@@ -82,24 +83,33 @@ export default {
 
       this.img = document.querySelectorAll('.img');
       this.offset = this.img_width*this.currentNumber;
-      this.img.forEach(img => img.style.transform = `translateX(${-this.offset}px)`)
+      this.img.forEach(img => img.setAttribute('style', `left: -${this.offset}px`))
     },
     prev(){
       this.currentNumber --;
       if(this.currentNumber > 0){
         this.offset = this.img_width * (this.currentNumber - 1);
-        this.img.forEach(img => {
-          img.style.transform = `translateX(${-this.offset}px)`
-        })
+        this.img.forEach(img => img.setAttribute('style', `left: -${this.offset}px`))
       }
     },
     next(){
+      console.log(this.currentNumber)
       this.currentNumber ++;
-      if(this.currentNumber < this.images.length+1){
-        this.offset = this.img_width * (this.currentNumber - 1);
+      if(this.currentNumber <= this.images.length){
+        this.offset = this.img_width * (this.currentNumber);
         this.img.forEach(img => {
-          img.style.transform = `translateX(${-this.offset}px)`
+          img.setAttribute('style', `left: -${this.offset}px`)
         })
+      }else{
+        this.currentNumber = 0;
+        this.offset = this.img_width*this.currentNumber;
+        this.img.forEach(img => img.setAttribute('style', `transition: ${0}s; left: -${this.offset}px`))
+        this.currentNumber++;
+        this.offset = this.img_width*this.currentNumber;
+
+        setTimeout(()=>{
+          this.img.forEach(img => img.setAttribute('style',`transition: ${.4}s; left: -${this.offset}px`))
+        }, 0)
       }
     },
 
@@ -129,6 +139,7 @@ image-slider img{
   width: 100%;
   transition: all .4s;
   position: relative;
+  left: 0;
 }
    /*  .fade-transition {
     transition: all 0.8s ease;

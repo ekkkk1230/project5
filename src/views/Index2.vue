@@ -12,9 +12,6 @@
  -->
 
 <template>
-    <!-- <transition name="fadeOut">
-        <Splesh v-if="intro == true"></Splesh>
-    </transition> -->
     <div class="wrap">
         <h1 class="hidden">마음아지트 메인</h1>
         <!-- //// 헤더 //// -->
@@ -42,26 +39,24 @@
                         <span>만성피로맨</span>님
                     </p>
                     <div class="phraseWrap">
-                            <p class="phrase_title">{{goodWords[num].sentence}}</p>
-                            <p class="phrase">{{goodWords[num].ko}}</p>
+                        <p class="phrase_title">{{goodWords[num].sentence}}</p>
+                        <p class="phrase">{{goodWords[num].ko}}</p>
                     </div>
                 </div>
-                <!-- !!!!(07.29) : 링크용 -->
-                <a href="splash.html">
-                    <div class="profile_img">
-                        <img src="../assets/indexView/main_profile_img.png">
-                    </div>
-                </a>
+                <div class="profile_img">
+                    <img src="../assets/indexView/main_profile_img.png" alt="프로필사진">
+                </div>
             </div>
         </header>
 
         <!-- //// 섹션 //// -->
         <section>
             <!-- 힐링상품 배너 -->
-            <div class="healing_banner">
+            <div class="healing_banner"
+           @mouseover="stopRotation"
+           @mouseout="startRotation">
                 <!-- <h2>Healing product</h2> -->
                 <div class="slide_container">
-
                     <div class="slide_img" v-for="(a,i) in healingBanners" :key="i">
                         <img :src="healingBanners[i].img" alt="힐링상품 배너" draggable="false">
                         <p>{{ healingBanners[i].content }}</p>
@@ -83,17 +78,6 @@
                     </swiper-slide>
                 </swiper>
             </div>
-            <!-- <div class="popular">
-                <h2>Popular meditation</h2>
-                <div class="slide_container">
-                    <div class="silde_box" v-for="(a,i) in popular" :key="i" :style="{ backgroundImage : `url(${popular[i].img})`, backgroundSize : 'cover' }">
-                        <div class="contents_field">
-                            <p>{{ popular[i].content }}</p>
-                            <img src="../assets/indexView/main_contentsPlay_icon.png" alt="인기미디어-플레이">
-                        </div>
-                    </div>
-                </div>
-            </div> -->
 
             <!-- 새로운 미디어 목록 -->
             <div class="new">
@@ -108,14 +92,6 @@
                         </div>
                     </swiper-slide>
                 </swiper>
-                <!-- <div class="slide_container">
-                    <div class="silde_box" v-for="(a,i) in newMedia" :key="i" :style="{ backgroundImage : `url(${newMedia[i].img})`}">
-                        <div class="contents_field">
-                            <p>{{ newMedia[i].content }}</p>
-                            <img src="../assets/indexView/main_contentsPlay_icon.png" alt="새미디어-플레이">
-                        </div>
-                    </div>
-                </div> -->
             </div>
 
             <!-- 힐링클래스 배너 -->
@@ -135,7 +111,7 @@
             </div>
         </section>
         <!-- //// 푸터 //// -->
-        <Footer></Footer>
+        <!-- <Footer></Footer> -->
     </div>
 </template>
 
@@ -163,6 +139,11 @@ export default {
             newMedias,
             classBanners,
             num: '0',
+
+            itemIdx: 0,
+            timer: null,
+            itemWidth: 0,
+            itemOffset: 0,
         }
     },
     components: {
@@ -170,25 +151,90 @@ export default {
         Swiper,
         SwiperSlide,
     },
+    computed: {
+        getItemWidth: () => {
+            const item_width = document.querySelector('.healing_banner').offsetWidth;
+            return item_width;
+        }
+    },
     mounted() {
-
-        // 2초 후에 <Discount> 사라지게?
-        setTimeout (()=> { // arrow function 쓰는 이유 : this를 바깥에있는 this를 제대로 잘 가져다 쓰기 위해서 (그래서 여기서는 arrow function으로 써야함)
-
-            // 실행할 코드
-            // 할인홍보배너 닫아주셈
+        setTimeout (()=> { 
             this.intro = false;
         }, 1000);
 
         this.random();
 
+        this.itemWidth = this.getItemWidth;
+        this.itemImg = document.querySelectorAll('.healing_banner .slide_img');
+        this.itemWrap = document.querySelector('.healing_banner .slide_container');
+        this.startRotation();
+        this.cloneItem(this.itemImg, this.healingBanners, this.itemOffset, this.itemWidth, this.itemIdx); 
+          
+        this.cloneItem(this.itemImg, this.healingBanners, this.itemOffset, this.itemWidth, this.itemIdx);   
+
     },
     methods: {
         random(){
             let randomNum = Math.floor(Math.random() * 10 + 1);
-            console.log(randomNum)
             this.num = randomNum
         },
+
+        startRotation(){
+            this.timer = setInterval(this.next, 2500);
+        },
+        stopRotation(){
+            clearInterval(this.timer);
+            this.timer = null;
+        },
+        cloneItem(img, count, offset, width, idx){
+            const startSlide = img[0];
+            const endSlide = img[count.length-1];
+            const startEl = document.createElement(startSlide.tagName);
+            const endEl = document.createElement(endSlide.tagName);
+
+            endSlide.classList.forEach(c => endEl.classList.add(c));
+            endEl.innerHTML = endSlide.innerHTML;
+            endEl.setAttribute('data-v-474a345a', '')
+
+            startSlide.classList.forEach(c => startEl.classList.add(c));
+            startEl.innerHTML = startSlide.innerHTML;
+            startEl.setAttribute('data-v-474a345a', '')
+
+            img[0].before(endEl);
+            img[count.length-1].after(startEl);
+
+            img = document.querySelectorAll('.healing_banner .slide_img');
+            offset = width*idx+1;
+            img.forEach(item => item.setAttribute('style', `left: -${offset}px`))
+        },
+        /* prev(){
+            this.itemIdx --;
+            if(this.itemIdx > 0){
+                this.itemOffset = this.itemWidth*(this.itemIdx - 1);
+                this.itemImg.forEach(item => item.setAttribute('style', `left: -${this.itemOffset}px`))
+            }
+        }, */
+        next(){
+            this.itemIdx ++;
+            if(this.itemIdx <= this.healingBanners.length){
+                this.itemOffset = this.itemWidth * (this.itemIdx);
+                this.itemImg.forEach(item => {
+                item.setAttribute('style', `left: -${this.itemOffset}px`)
+                })
+            }else{
+                this.itemIdx = 0;
+                this.itemOffset = this.itemWidth*this.itemIdx;
+                this.itemImg.forEach(item => item.setAttribute('style', `transition: ${0}s; left: -${this.itemOffset}px`))
+
+                this.itemIdx ++;
+                this.itemOffset = this.itemWidth*this.itemIdx;
+
+                setTimeout(()=>{
+                this.itemImg.forEach(item => item.setAttribute('style',`transition: ${.4}s; left: -${this.itemOffset}px`))
+                }, 0)
+        }
+    },
+
 
     }
 }
@@ -451,14 +497,16 @@ section {
 .healing_banner .slide_container {
     width: 100%;
     display: flex;
-    transition: all .5px;
-    /* transform: translateX(-100vw); */
+    flex-flow: row nowrap;
+    overflow: hidden
 }
 
 .healing_banner .slide_img {
     width: 100%;
     flex-shrink: 0;
     position: relative;
+    left: 0;
+    transition: all .4s
 }
 
 .healing_banner .slide_img img {

@@ -32,6 +32,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "index" */ '../views/Index.vue')
   },
   {
+    path: '/index2',
+    name: 'index2',
+    // route level code-splitting
+    // this generates a separate chunk (index2.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "index2" */ '../views/Index2.vue')
+  },
+  {
     path: '/ListDairy',
     name: 'ListDairy',
     // route level code-splitting
