@@ -67,7 +67,7 @@
             </div>
         </section>
         <!-- //// 푸터 //// -->
-        <Footer></Footer>
+        <!-- <Footer></Footer> -->
     </div>
 </template>
 
