@@ -12,13 +12,13 @@
  -->
 
 <template>
-    <div class="wrap">
+    <div class="setting_wrap">
         <h1 class="hidden">마이페이지 메인</h1>
         <!-- //// section //// -->
         <section>
             <div class="profile">
                 <!-- 1. info 부분 -->
-                <div class="profile_info">
+                <div class="setting_profile_info">
                     <!-- info 묶음 -->
                     <div class="info_wrap">
                         <!-- 프로필 이미지 -->
@@ -99,7 +99,18 @@
                     </li>
                 </ul>
                 <!-- 5. 배너 부분 -->
-                <div class="mypage_banner">
+                <div class="mypage_banner"
+                @mouseover="stopRotation"
+                @mouseout="startRotation">
+                    <!-- <h2>Healing product</h2> -->
+                    <div class="slide_container">
+                        <div class="slide_img" v-for="(a,i) in healingBanners" :key="i">
+                            <img :src="healingBanners[i].img" alt="힐링상품 배너" draggable="false">
+                            <p>{{ healingBanners[i].content }}</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="mypage_banner">
                     <div class="slide_container">
                         <div class="slide_img">
                             <p>일상 속 휴식선물</p>
@@ -114,7 +125,7 @@
                             <img src="../assets/settingMainView/setMain_healingBannerImg_02.jpg" alt="힐링상품-홍보배너">
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </section>
         <!-- //// 푸터 //// -->
@@ -124,17 +135,96 @@
 
 <script>
 import Footer from '../components/Footer.vue';
+import healingBanners from '../data/healingBanner.js';
 
 export default {
     name: 'settingMain',
+    data(){
+        return{
+            healingBanners,
+
+            itemIdx: 0,
+            timer: null,
+            itemWidth: 0,
+            itemOffset: 0,
+        }
+    },
     components: {
         Footer : Footer,
+    },
+    computed: {
+        getItemWidth: () => {
+            const item_width = document.querySelector('.mypage_banner').offsetWidth;
+            return item_width;
+        }
+    },
+    mounted() {
+        this.itemWidth = this.getItemWidth;
+        this.itemImg = document.querySelectorAll('.mypage_banner .slide_img');
+        this.itemWrap = document.querySelector('.mypage_banner .slide_container');
+        this.startRotation();
+        this.cloneItem(this.itemImg, this.healingBanners, this.itemOffset, this.itemWidth, this.itemIdx); 
+    },
+    methods: {
+        startRotation(){
+            this.timer = setInterval(this.next, 2500);
+        },
+        stopRotation(){
+            clearInterval(this.timer);
+            this.timer = null;
+        },
+        cloneItem(img, count, offset, width, idx){
+            const startSlide = img[0];
+            const endSlide = img[count.length-1];
+            const startEl = document.createElement(startSlide.tagName);
+            const endEl = document.createElement(endSlide.tagName);
+
+            endSlide.classList.forEach(c => endEl.classList.add(c));
+            endEl.innerHTML = endSlide.innerHTML;
+
+            startSlide.classList.forEach(c => startEl.classList.add(c));
+            startEl.innerHTML = startSlide.innerHTML;
+
+            img[0].before(endEl);
+            img[count.length-1].after(startEl);
+
+            img = document.querySelectorAll('.mypage_banner .slide_img');
+            offset = width*idx+1;
+            img.forEach(item => item.setAttribute('style', `left: -${offset}px`))
+        },
+        /* prev(){
+            this.itemIdx --;
+            if(this.itemIdx > 0){
+                this.itemOffset = this.itemWidth*(this.itemIdx - 1);
+                this.itemImg.forEach(item => item.setAttribute('style', `left: -${this.itemOffset}px`))
+            }
+        }, */
+        next(){
+            this.itemIdx ++;
+            if(this.itemIdx <= this.healingBanners.length){
+                this.itemOffset = this.itemWidth * (this.itemIdx);
+                this.itemImg.forEach(item => {
+                item.setAttribute('style', `left: -${this.itemOffset}px`)
+                })
+            }else{
+                this.itemIdx = 0;
+                this.itemOffset = this.itemWidth*this.itemIdx;
+                this.itemImg.forEach(item => item.setAttribute('style', `transition: ${0}s; left: -${this.itemOffset}px`))
+
+                this.itemIdx ++;
+                this.itemOffset = this.itemWidth*this.itemIdx;
+
+                setTimeout(()=>{
+                this.itemImg.forEach(item => item.setAttribute('style',`transition: ${.4}s; left: -${this.itemOffset}px`))
+                }, 0)
+            }
+        }
     }
 
 }
 </script>
 
-<style scoped>
+<style>
 @charset "utf-8";
 
 * {
@@ -189,7 +279,7 @@ body::-webkit-scrollbar {
 
 /* 레이아웃 --------------------------------------------------------------- */
 
-.wrap {
+.setting_wrap {
     width: 100%;
     max-width: 767px;
     min-width: 385px;
@@ -213,7 +303,7 @@ section {
 }
 
 /* info 부분 */
-.profile_info {
+.setting_profile_info {
     display: inline-block;
     width: 100%;
     height: 253px;
@@ -395,7 +485,7 @@ section {
 }
 
 .mypage_banner .slide_container {
-    width: 300%;
+    width: 100%;
     display: flex;
     transition: all .5px;
     /* transform: translateX(-100vw); */
@@ -403,7 +493,10 @@ section {
 
 .mypage_banner .slide_img {
     width: 100%;
+    flex-shrink: 0;
     position: relative;
+    left: 0;
+    transition: all .4s;
 }
 
 .mypage_banner .slide_img img {

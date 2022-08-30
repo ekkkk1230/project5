@@ -21,36 +21,15 @@
             <div class="section1">
                 <h2>Daily Routine</h2>
                 <p class="h2_p">바쁜 하루 속 하루 루틴을 시작해보세요!</p>
-                <div class="daily_routine">
-                    <div>
-                        <a href="#none">
-                            <img src="../assets/healingView/D_R_1.png" alt="하루루틴1" width="100" height="100">
-                        </a>
-                        <p class="time">7-10분</p>
-                        <p class="place">Morning</p>
-                    </div>
-                    <div>
-                        <a href="#none">
-                            <img src="../assets/healingView/D_R_2.png" alt="하루루틴2" width="100" height="100">
-                        </a>
-                        <p class="time">7-10분</p>
-                        <p class="place">To Work</p>
-                    </div>
-                    <div>
-                        <a href="#none">
-                            <img src="../assets/healingView/D_R_3.png" alt="하루루틴3" width="100" height="100">
-                        </a>
-                        <p class="time">7-10분</p>
-                        <p class="place">To Home</p>
-                    </div>
-                    <div>
-                        <a href="#none">
-                            <img src="../assets/healingView/D_R_4.png" alt="하루루틴4" width="100" height="100">
-                        </a>
-                        <p class="time">7-10분</p>
-                        <p class="place">At Sleep</p>
-                    </div>
-                </div>
+                <swiper class="daily_routin" :slides-per-view="2.5" :space-between="10" navigation>
+                    <swiper-slide v-for="(a,i) in dailyRoutin" :key="i">
+                        <div class="inside-wrapper">
+                            <img :src='dailyRoutin[i].img' alt="dailyRoutin">
+                            <p class="time">{{dailyRoutin[i].time}}</p>
+                            <p class="place">{{dailyRoutin[i].place}}</p>
+                        </div>
+                    </swiper-slide>
+                </swiper>
             </div>
             <!-- 상황별 -->
             <div class="section2">
@@ -100,11 +79,24 @@
 
 <script>
 import Footer from '../components/Footer.vue';
+import dailyRoutin from '@/data/dailyRoutin';
+
+import SwiperCore, { Navigation } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/swiper-bundle.min.css";
+SwiperCore.use(Navigation);
 
 export default {
     name: 'healing',
+    data(){
+        return{
+            dailyRoutin
+        }
+    },
     components: {
         Footer : Footer,
+        Swiper,
+        SwiperSlide,
     }
 
 }
@@ -213,14 +205,16 @@ section{
     letter-spacing: -0.5px;
 }
 
-.daily_routine .time {
+.time {
     margin-top: 20px;
     font-size: 14px;
+    text-align: center;
 }
 
-.daily_routine .place {
+.place {
     font-size: 16px;
     font-weight: 600;
+    text-align: center;
 }
 
 
