@@ -91,6 +91,7 @@ export default {
         }
     },
     components: {
+        Footer,
         Swiper,
         SwiperSlide,
     }

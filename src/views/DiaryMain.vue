@@ -21,7 +21,7 @@
                 <!-- 일지쓰기 버튼 -->
                 <!-- !!!!(07.28) : 테스트용 추가 -->
                 <!-- <a class="write_btn cf" href="#none"> -->
-                <router-link to="/ListDairy" class="write_btn cf">
+                <router-link to="/AddDiary" class="write_btn cf">
                     <img src="../assets/diaryMainView/write_btn.png" alt="write_btn">
                 </router-link>
                 
