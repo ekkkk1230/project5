@@ -56,7 +56,7 @@
                 <div class="record_wrap">
                     <!-- 기록 내용 부분 -->
                     <div class="record_wrap_content">
-                        <h3>2022-07-18</h3>
+                        <h3>{{nowDate}}</h3>
                         <!-- 기록 -->
                         <div class="content_wrap diary">
                             <div class="timeline">
