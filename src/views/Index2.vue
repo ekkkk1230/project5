@@ -97,6 +97,14 @@
             <!-- 힐링클래스 배너 -->
             <div class="class_banner">
                 <h2 class="class">Class</h2>
+                <div class="slide_img" v-for="(a,i) in classBanners" :key="i">
+                    <p class="title">OFFLINE CLASS 1<span>기 모집중</span></p>
+                    <img :src="classBanners[i].img" alt="힐링클래스-배너" draggable="false">
+                    <p>{{ classBanners[i].content }}</p>
+                </div>
+            </div>
+            <!-- <div class="class_banner">
+                <h2 class="class">Class</h2>
                 <div class="class_banner_slide">
                     <div class="slide_container">
                         <div class="slide_img" v-for="(a,i) in classBanners" :key="i">
@@ -108,7 +116,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </section>
         <!-- //// 푸터 //// -->
         <!-- <Footer></Footer> -->

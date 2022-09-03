@@ -97,7 +97,10 @@
             <!-- 힐링클래스 배너 -->
             <div class="class_banner">
                 <h2 class="class">Class</h2>
-                <div class="class_banner_slide">
+                <div class="class_banner_slide"
+                @mouseover="stopRotation2"
+                @mouseout="startRotation2"
+                >
                     <div class="slide_container">
                         <div class="slide_img" v-for="(a,i) in classBanners" :key="i">
                             <div class="text_field">
@@ -140,12 +143,12 @@ export default {
             classBanners,
             num: '0',
 
-            itemIdx: 0,
+            itemIdx: 1,
             timer: null,
             itemWidth: 0,
             itemOffset: 0,
 
-            classIdx: 0,
+            classIdx: 1,
             class_timer: null,
             classWidth: 0,
             classOffset: 0,
@@ -185,7 +188,7 @@ export default {
         this.startRotation();
         this.cloneItem(this.itemImg, this.healingBanners, this.itemOffset, this.itemWidth, this.itemIdx); 
         this.startRotation2();
-        this.cloneItem(this.classImg, this.classBanners, this.classOffset, this.classWidth, this.classIdx); 
+        this.cloneItem2(this.classImg, this.classBanners, this.classOffset, this.classWidth, this.classIdx); 
 
     },
     methods: {
@@ -225,7 +228,26 @@ export default {
             img[count.length-1].after(startEl);
 
             img = document.querySelectorAll('.healing_banner .slide_img');
-            offset = width*idx+1;
+            offset = width*idx;
+            img.forEach(item => item.setAttribute('style', `left: -${offset}px`))
+        },
+        cloneItem2(img, count, offset, width, idx){
+            const startSlide = img[0];
+            const endSlide = img[count.length-1];
+            const startEl = document.createElement(startSlide.tagName);
+            const endEl = document.createElement(endSlide.tagName);
+
+            endSlide.classList.forEach(c => endEl.classList.add(c));
+            endEl.innerHTML = endSlide.innerHTML;   
+
+            startSlide.classList.forEach(c => startEl.classList.add(c));
+            startEl.innerHTML = startSlide.innerHTML;
+
+            img[0].before(endEl);
+            img[count.length-1].after(startEl);
+
+            img = document.querySelectorAll('.class_banner_slide .slide_img');
+            offset = width*idx;
             img.forEach(item => item.setAttribute('style', `left: -${offset}px`))
         },
         prev(){

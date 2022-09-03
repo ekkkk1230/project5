@@ -180,7 +180,7 @@ export default {
         return{
             healingBanners,
 
-            itemIdx: 0,
+            itemIdx: 1,
             timer: null,
             itemWidth: 0,
             itemOffset: 0,
@@ -193,16 +193,29 @@ export default {
         getItemWidth: () => {
             const item_width = document.querySelector('.mypage_banner').offsetWidth;
             return item_width;
-        }
+        },
     },
     mounted() {
+        setTimeout (()=> { 
+            this.intro = false;
+        }, 1000);
+
+        this.random();
+
         this.itemWidth = this.getItemWidth;
         this.itemImg = document.querySelectorAll('.mypage_banner .slide_img');
         this.itemWrap = document.querySelector('.mypage_banner .slide_container');
+
         this.startRotation();
         this.cloneItem(this.itemImg, this.healingBanners, this.itemOffset, this.itemWidth, this.itemIdx); 
+
     },
     methods: {
+        random(){
+            let randomNum = Math.floor(Math.random() * 10 + 1);
+            this.num = randomNum
+        },
+
         startRotation(){
             this.timer = setInterval(this.next, 2500);
         },
@@ -210,6 +223,14 @@ export default {
             clearInterval(this.timer);
             this.timer = null;
         },
+        startRotation2(){
+            this.class_timer = setInterval(this.next2, 2500);
+        },
+        stopRotation2(){
+            clearInterval(this.class_timer);
+            this.class_timer = null;
+        },
+
         cloneItem(img, count, offset, width, idx){
             const startSlide = img[0];
             const endSlide = img[count.length-1];
@@ -217,7 +238,7 @@ export default {
             const endEl = document.createElement(endSlide.tagName);
 
             endSlide.classList.forEach(c => endEl.classList.add(c));
-            endEl.innerHTML = endSlide.innerHTML;
+            endEl.innerHTML = endSlide.innerHTML;   
 
             startSlide.classList.forEach(c => startEl.classList.add(c));
             startEl.innerHTML = startSlide.innerHTML;
@@ -226,16 +247,16 @@ export default {
             img[count.length-1].after(startEl);
 
             img = document.querySelectorAll('.mypage_banner .slide_img');
-            offset = width*idx+1;
+            offset = width*idx;
             img.forEach(item => item.setAttribute('style', `left: -${offset}px`))
         },
-        /* prev(){
+        prev(){
             this.itemIdx --;
             if(this.itemIdx > 0){
                 this.itemOffset = this.itemWidth*(this.itemIdx - 1);
                 this.itemImg.forEach(item => item.setAttribute('style', `left: -${this.itemOffset}px`))
             }
-        }, */
+        },
         next(){
             this.itemIdx ++;
             if(this.itemIdx <= this.healingBanners.length){

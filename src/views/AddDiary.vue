@@ -347,7 +347,7 @@ h3{
 .wrap{
     width: 100%;
     max-width: 767px;
-    min-width: 452px;
+    min-width: 385px;
     margin: 0 auto;
 }
 
@@ -377,14 +377,14 @@ section{
     .today{
         h2{
             color: #ffffff;
-            padding-bottom: 20px;
-            font-size: 2em;
+            padding-bottom: 10px;
+            font-size: 29px;
             text-align: left;
         }
         p{
             color: #ffffff;
             padding-bottom: 20px;
-            font-size: 1.5em;
+            font-size: 20px;
         }
     }
 
