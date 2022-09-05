@@ -152,17 +152,7 @@
                     </li>
                 </ul>
                 <!-- 5. 배너 부분 -->
-                <div class="mypage_banner"
-                @mouseover="stopRotation"
-                @mouseout="startRotation">
-                    <!-- <h2>Healing product</h2> -->
-                    <div class="slide_container">
-                        <div class="slide_img" v-for="(a,i) in healingBanners" :key="i">
-                            <img :src="healingBanners[i].img" alt="힐링상품 배너" draggable="false">
-                            <p>{{ healingBanners[i].content }}</p>
-                        </div>
-                    </div>
-                </div>
+                <swiper2 :healingBanners="healingBanners"></swiper2>
             </div>
         </section>
         <!-- //// 푸터 //// -->
@@ -171,6 +161,7 @@
 </template>
 
 <script>
+import swiper2 from '../components/swiper2.vue'
 import Footer from '../components/Footer.vue';
 import healingBanners from '../data/healingBanner.js';
 
@@ -187,96 +178,10 @@ export default {
         }
     },
     components: {
+        swiper2,
         Footer : Footer,
     },
-    computed: {
-        getItemWidth: () => {
-            const item_width = document.querySelector('.mypage_banner').offsetWidth;
-            return item_width;
-        },
-    },
-    mounted() {
-        setTimeout (()=> { 
-            this.intro = false;
-        }, 1000);
-
-        this.random();
-
-        this.itemWidth = this.getItemWidth;
-        this.itemImg = document.querySelectorAll('.mypage_banner .slide_img');
-        this.itemWrap = document.querySelector('.mypage_banner .slide_container');
-
-        this.startRotation();
-        this.cloneItem(this.itemImg, this.healingBanners, this.itemOffset, this.itemWidth, this.itemIdx); 
-
-    },
     methods: {
-        random(){
-            let randomNum = Math.floor(Math.random() * 10 + 1);
-            this.num = randomNum
-        },
-
-        startRotation(){
-            this.timer = setInterval(this.next, 2500);
-        },
-        stopRotation(){
-            clearInterval(this.timer);
-            this.timer = null;
-        },
-        startRotation2(){
-            this.class_timer = setInterval(this.next2, 2500);
-        },
-        stopRotation2(){
-            clearInterval(this.class_timer);
-            this.class_timer = null;
-        },
-
-        cloneItem(img, count, offset, width, idx){
-            const startSlide = img[0];
-            const endSlide = img[count.length-1];
-            const startEl = document.createElement(startSlide.tagName);
-            const endEl = document.createElement(endSlide.tagName);
-
-            endSlide.classList.forEach(c => endEl.classList.add(c));
-            endEl.innerHTML = endSlide.innerHTML;   
-
-            startSlide.classList.forEach(c => startEl.classList.add(c));
-            startEl.innerHTML = startSlide.innerHTML;
-
-            img[0].before(endEl);
-            img[count.length-1].after(startEl);
-
-            img = document.querySelectorAll('.mypage_banner .slide_img');
-            offset = width*idx;
-            img.forEach(item => item.setAttribute('style', `left: -${offset}px`))
-        },
-        prev(){
-            this.itemIdx --;
-            if(this.itemIdx > 0){
-                this.itemOffset = this.itemWidth*(this.itemIdx - 1);
-                this.itemImg.forEach(item => item.setAttribute('style', `left: -${this.itemOffset}px`))
-            }
-        },
-        next(){
-            this.itemIdx ++;
-            if(this.itemIdx <= this.healingBanners.length){
-                this.itemOffset = this.itemWidth * (this.itemIdx);
-                this.itemImg.forEach(item => {
-                item.setAttribute('style', `left: -${this.itemOffset}px`)
-                })
-            }else{
-                this.itemIdx = 0;
-                this.itemOffset = this.itemWidth*this.itemIdx;
-                this.itemImg.forEach(item => item.setAttribute('style', `transition: ${0}s; left: -${this.itemOffset}px`))
-
-                this.itemIdx ++;
-                this.itemOffset = this.itemWidth*this.itemIdx;
-
-                setTimeout(()=>{
-                this.itemImg.forEach(item => item.setAttribute('style',`transition: ${.4}s; left: -${this.itemOffset}px`))
-                }, 0)
-            }
-        },
         premium(){
             document.querySelector('.pop').style.display = 'block'
         },
@@ -288,7 +193,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @charset "utf-8";
 
 * {
@@ -345,7 +250,7 @@ body::-webkit-scrollbar {
 .pop{
     position: absolute;
     width: 100%;
-    height: 1200px;
+    height: 1260px;
     max-width: 767px;
     min-width: 385px;
     margin: 0 auto;
@@ -469,7 +374,7 @@ body::-webkit-scrollbar {
     position: absolute;
     left: 50%;
     transform: translate(-50%);
-    font-size: 1.1em;
+    font-size: 1em;
     padding: 15px 50px;
     border-radius: 30px;
     background-color: #FF922D;

@@ -96,7 +96,7 @@ footer{
     bottom: 20px;
     left: 50%;
     transform: translate(-50%);
-
+    z-index: 2;
 }
 footer .footer_all {
     background-color: #68b39f;

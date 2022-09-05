@@ -53,8 +53,26 @@
         <section>
             <!-- 힐링상품 배너 -->
             <div class="healing_banner">
-                <swiper-2 :healingBanners="healingBanners"></swiper-2>
+                <!-- <h2>Healing product</h2> -->
+                <swiper :slides-per-view="1" :space-between="0" navigation>
+                    <swiper-slide v-for="(a,i) in healingBanners" :key="i">
+                        <img :src="healingBanners[i].img" alt="힐링상품 배너" draggable="false">
+                            <p>{{ healingBanners[i].content }}</p>
+                    </swiper-slide>
+                </swiper>
             </div>
+            
+            <!-- <div class="healing_banner"
+           @mouseover="stopRotation"
+           @mouseout="startRotation">
+                <h2>Healing product</h2>
+                <div class="slide_container">
+                    <div class="slide_img" v-for="(a,i) in healingBanners" :key="i">
+                        <img :src="healingBanners[i].img" alt="힐링상품 배너" draggable="false">
+                        <p>{{ healingBanners[i].content }}</p>
+                    </div>
+                </div>
+            </div> -->
 
             <!-- 인기 미디어 목록 -->
             <div class="popular">
@@ -98,6 +116,20 @@
                         <img :src="classBanners[i].img" alt="힐링클래스-배너" draggable="false">
                     </swiper-slide>
                 </swiper>
+               <!--  <div class="class_banner_slide"
+                @mouseover="stopRotation2"
+                @mouseout="startRotation2"
+                >
+                    <div class="slide_container">
+                        <div class="slide_img" v-for="(a,i) in classBanners" :key="i">
+                            <div class="text_field">
+                                <p class="title">OFFLINE CLASS 1<span>기 모집중</span></p>
+                                <p class="content">{{ classBanners[i].content }}</p>
+                            </div>
+                            <img :src="classBanners[i].img" alt="힐링클래스-배너" draggable="false">
+                        </div>
+                    </div>
+                </div> -->
             </div>
         </section>
         <!-- //// 푸터 //// -->
@@ -106,7 +138,6 @@
 </template>
 
 <script>
-import swiper2 from '../components/swiper2.vue';
 import Footer from '../components/Footer.vue';
 
 import SwiperCore, { Navigation } from "swiper";
@@ -143,7 +174,6 @@ export default {
         }
     },
     components: {
-        swiper2,
         Footer : Footer,
         Swiper,
         SwiperSlide,
@@ -160,14 +190,14 @@ export default {
     },
     methods: {
         random(){
-            let randomNum = Math.floor(Math.random() * 10);
+            let randomNum = Math.floor(Math.random() * 10 + 1);
             this.num = randomNum
         },
     }
 }
 </script>
 
-<style scoped>
+<style>
 
 
 @charset "utf-8";
@@ -438,7 +468,9 @@ section {
     height: auto;
     margin: 50px auto;
 }
-
+.popular .swiper-button-next, .swiper-button-prev{
+    width: 0;
+}
 .popular .inside-wrapper {
   height: 200px;
   width: 100%;
@@ -503,6 +535,9 @@ section {
     background-color: #CEDFCC;
     border-radius: 0 0 30px 30px;
     text-align: center;
+}
+.swiper-button-next, .swiper-button-prev{
+    display: none;
 }
 
 /* 새로운 미디어 목록 */

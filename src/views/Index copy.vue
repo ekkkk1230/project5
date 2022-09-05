@@ -52,8 +52,16 @@
         <!-- //// 섹션 //// -->
         <section>
             <!-- 힐링상품 배너 -->
-            <div class="healing_banner">
-                <swiper-2 :healingBanners="healingBanners"></swiper-2>
+            <div class="healing_banner"
+           @mouseover="stopRotation"
+           @mouseout="startRotation">
+                <!-- <h2>Healing product</h2> -->
+                <div class="slide_container">
+                    <div class="slide_img" v-for="(a,i) in healingBanners" :key="i">
+                        <img :src="healingBanners[i].img" alt="힐링상품 배너" draggable="false">
+                        <p>{{ healingBanners[i].content }}</p>
+                    </div>
+                </div>
             </div>
 
             <!-- 인기 미디어 목록 -->
@@ -89,15 +97,20 @@
             <!-- 힐링클래스 배너 -->
             <div class="class_banner">
                 <h2 class="class">Class</h2>
-                <swiper :slides-per-view="1" :space-between="0" navigation>
-                    <swiper-slide v-for="(a,i) in classBanners" :key="i">
-                        <div class="text_field">
+                <div class="class_banner_slide"
+                @mouseover="stopRotation2"
+                @mouseout="startRotation2"
+                >
+                    <div class="slide_container">
+                        <div class="slide_img" v-for="(a,i) in classBanners" :key="i">
+                            <div class="text_field">
                                 <p class="title">OFFLINE CLASS 1<span>기 모집중</span></p>
                                 <p class="content">{{ classBanners[i].content }}</p>
+                            </div>
+                            <img :src="classBanners[i].img" alt="힐링클래스-배너" draggable="false">
                         </div>
-                        <img :src="classBanners[i].img" alt="힐링클래스-배너" draggable="false">
-                    </swiper-slide>
-                </swiper>
+                    </div>
+                </div>
             </div>
         </section>
         <!-- //// 푸터 //// -->
@@ -106,7 +119,6 @@
 </template>
 
 <script>
-import swiper2 from '../components/swiper2.vue';
 import Footer from '../components/Footer.vue';
 
 import SwiperCore, { Navigation } from "swiper";
@@ -143,13 +155,19 @@ export default {
         }
     },
     components: {
-        swiper2,
         Footer : Footer,
         Swiper,
         SwiperSlide,
     },
     computed: {
-
+        getItemWidth: () => {
+            const item_width = document.querySelector('.healing_banner').offsetWidth;
+            return item_width;
+        },
+        getClassWidth: () => {
+            const item_width = document.querySelector('.class_banner_slide').offsetWidth;
+            return item_width;
+        }
     },
     mounted() {
         setTimeout (()=> { 
@@ -157,17 +175,136 @@ export default {
         }, 1000);
 
         this.random();
+
+        this.itemWidth = this.getItemWidth;
+        this.itemImg = document.querySelectorAll('.healing_banner .slide_img');
+        this.itemWrap = document.querySelector('.healing_banner .slide_container');
+
+        
+        this.classWidth = this.getClassWidth;
+        this.classImg = document.querySelectorAll('.class_banner_slide .slide_img');
+        this.classWrap = document.querySelector('.class_banner_slide .slide_container');
+
+        this.startRotation();
+        this.cloneItem(this.itemImg, this.healingBanners, this.itemOffset, this.itemWidth, this.itemIdx); 
+        this.startRotation2();
+        this.cloneItem2(this.classImg, this.classBanners, this.classOffset, this.classWidth, this.classIdx); 
+
     },
     methods: {
         random(){
-            let randomNum = Math.floor(Math.random() * 10);
+            let randomNum = Math.floor(Math.random() * 10 + 1);
             this.num = randomNum
         },
+
+        startRotation(){
+            this.timer = setInterval(this.next, 2500);
+        },
+        stopRotation(){
+            clearInterval(this.timer);
+            this.timer = null;
+        },
+        startRotation2(){
+            this.class_timer = setInterval(this.next2, 2500);
+        },
+        stopRotation2(){
+            clearInterval(this.class_timer);
+            this.class_timer = null;
+        },
+
+        cloneItem(img, count, offset, width, idx){
+            const startSlide = img[0];
+            const endSlide = img[count.length-1];
+            const startEl = document.createElement(startSlide.tagName);
+            const endEl = document.createElement(endSlide.tagName);
+
+            endSlide.classList.forEach(c => endEl.classList.add(c));
+            endEl.innerHTML = endSlide.innerHTML;   
+
+            startSlide.classList.forEach(c => startEl.classList.add(c));
+            startEl.innerHTML = startSlide.innerHTML;
+
+            img[0].before(endEl);
+            img[count.length-1].after(startEl);
+
+            img = document.querySelectorAll('.healing_banner .slide_img');
+            offset = width*idx;
+            img.forEach(item => item.setAttribute('style', `left: -${offset}px`))
+        },
+        cloneItem2(img, count, offset, width, idx){
+            const startSlide = img[0];
+            const endSlide = img[count.length-1];
+            const startEl = document.createElement(startSlide.tagName);
+            const endEl = document.createElement(endSlide.tagName);
+
+            endSlide.classList.forEach(c => endEl.classList.add(c));
+            endEl.innerHTML = endSlide.innerHTML;   
+
+            startSlide.classList.forEach(c => startEl.classList.add(c));
+            startEl.innerHTML = startSlide.innerHTML;
+
+            img[0].before(endEl);
+            img[count.length-1].after(startEl);
+
+            img = document.querySelectorAll('.class_banner_slide .slide_img');
+            offset = width*idx;
+            img.forEach(item => item.setAttribute('style', `left: -${offset}px`))
+        },
+        prev(){
+            this.itemIdx --;
+            if(this.itemIdx > 0){
+                this.itemOffset = this.itemWidth*(this.itemIdx - 1);
+                this.itemImg.forEach(item => item.setAttribute('style', `left: -${this.itemOffset}px`))
+            }
+        },
+        next(){
+            this.itemIdx ++;
+            if(this.itemIdx <= this.healingBanners.length){
+                this.itemOffset = this.itemWidth * (this.itemIdx);
+                this.itemImg.forEach(item => {
+                item.setAttribute('style', `left: -${this.itemOffset}px`)
+                })
+            }else{
+                this.itemIdx = 0;
+                this.itemOffset = this.itemWidth*this.itemIdx;
+                this.itemImg.forEach(item => item.setAttribute('style', `transition: ${0}s; left: -${this.itemOffset}px`))
+
+                this.itemIdx ++;
+                this.itemOffset = this.itemWidth*this.itemIdx;
+
+                setTimeout(()=>{
+                this.itemImg.forEach(item => item.setAttribute('style',`transition: ${.4}s; left: -${this.itemOffset}px`))
+                }, 0)
+            }
+        },
+
+        next2(){
+            this.classIdx ++;
+            if(this.classIdx <= this.classBanners.length){
+                this.classOffset = this.classWidth * (this.classIdx);
+                this.classImg.forEach(c_item => {
+                c_item.setAttribute('style', `left: -${this.classOffset}px`)
+                })
+            }else{
+                this.classIdx = 0;
+                this.classOffset = this.classWidth*this.classIdx;
+                this.classImg.forEach(c_item => c_item.setAttribute('style', `transition: ${0}s; left: -${this.classOffset}px`))
+
+                this.classIdx ++;
+                this.classOffset = this.classWidth*this.classIdx;
+
+                setTimeout(()=>{
+                this.classImg.forEach(c_item => c_item.setAttribute('style',`transition: ${.4}s; left: -${this.classOffset}px`))
+                }, 0)
+            }
+        },
+
+
     }
 }
 </script>
 
-<style scoped>
+<style>
 
 
 @charset "utf-8";
@@ -438,7 +575,9 @@ section {
     height: auto;
     margin: 50px auto;
 }
-
+.popular .swiper-button-next, .swiper-button-prev{
+    width: 0;
+}
 .popular .inside-wrapper {
   height: 200px;
   width: 100%;
